@@ -2,7 +2,7 @@
 import traverseModule from '@babel/traverse'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 
 const traverse = traverseModule.default
 const consoleCallPattern = /\bconsole\s*(?:\?\.)?\.\s*(?:log|debug|info|warn|error|trace|table|group|groupCollapsed|groupEnd|time|timeEnd|timeLog|dir|dirxml|assert|count|countReset|clear|profile|profileEnd)\s*(?:\?\.)?\s*\(/
@@ -41,6 +41,24 @@ function stripConsoleCalls() {
   }
 }
 
-export default defineConfig({
-  plugins: [react(), tailwindcss(), stripConsoleCalls()],
+function configureVendorRuntimeApiUrl(apiUrl) {
+  return {
+    name: 'configure-vendor-runtime-api-url',
+    enforce: 'pre',
+    transform(code, id) {
+      const normalizedId = id.replaceAll('\\', '/')
+      if (!normalizedId.includes('/vendor-admin-runtime/')) return null
+      const updatedCode = code.replaceAll('http://localhost:4000/api/v1', apiUrl)
+      return updatedCode === code ? null : { code: updatedCode, map: null }
+    },
+  }
+}
+
+export default defineConfig(({ mode }) => {
+  const { VITE_API_BASE_URL } = loadEnv(mode, process.cwd(), 'VITE_')
+  const apiUrl = VITE_API_BASE_URL?.trim() || 'http://localhost:4000/api/v1'
+
+  return {
+    plugins: [react(), tailwindcss(), configureVendorRuntimeApiUrl(apiUrl), stripConsoleCalls()],
+  }
 })
