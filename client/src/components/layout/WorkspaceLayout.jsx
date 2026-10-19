@@ -35,7 +35,8 @@ export default function WorkspaceLayout({ admin = false }) {
   const navigate = useNavigate()
   const links = admin ? adminLinks : memberLinks
   async function handleLogout() {
-    try { await logout().unwrap(); navigate('/login') } catch { /* Keep the current session visible if the request fails. */ }
+    try { await logout().unwrap() } catch { /* The client session is cleared even when the server session is unavailable. */ }
+    navigate('/login')
   }
 
   return <div className="min-h-screen bg-neutral-100 text-neutral-950 md:flex">

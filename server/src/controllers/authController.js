@@ -88,8 +88,10 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const logout = asyncHandler(async (req, res) => {
-  await User.updateOne({ _id: req.user.id }, { $inc: { tokenVersion: 1 } });
-  disconnectRealtimeUser(req.user.id);
+  if (req.user?.id) {
+    await User.updateOne({ _id: req.user.id }, { $inc: { tokenVersion: 1 } });
+    disconnectRealtimeUser(req.user.id);
+  }
   clearAuthCookies(res);
   res.json({ success: true, message: 'Signed out successfully', data: {} });
 });

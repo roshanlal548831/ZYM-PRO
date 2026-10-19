@@ -53,7 +53,10 @@ export const authApi = apiSlice.injectEndpoints({
           await queryFulfilled
           dispatch(clearUser())
           dispatch(apiSlice.util.resetApiState())
-        } catch { /* Keep cached session data when the server did not sign out. */ }
+        } catch {
+          dispatch(clearUser())
+          dispatch(apiSlice.util.resetApiState())
+        }
       },
     }),
     forgotPassword: builder.mutation({ query: (body) => ({ url: '/auth/forgot-password', method: 'POST', body }) }),

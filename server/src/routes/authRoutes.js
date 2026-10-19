@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as controller from '../controllers/authController.js';
 import authenticate from '../middleware/authenticate.js';
+import optionalAuthenticate from '../middleware/optionalAuthenticate.js';
 import validate from '../middleware/validate.js';
 import { authLimiter, otpLimiter } from '../middleware/rateLimiters.js';
 import { registerSchema, emailOtpSchema, resendOtpSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema, changePasswordSchema, phoneOtpSchema, resetOtpSchema } from '../validators/authValidators.js';
@@ -12,7 +13,7 @@ router.post('/resend-otp', otpLimiter, validate(resendOtpSchema), controller.res
 router.post('/resend-phone-otp', authenticate, otpLimiter, controller.resendPhoneOtp);
 router.post('/verify-phone-otp', authenticate, otpLimiter, validate(phoneOtpSchema), controller.verifyPhoneOtp);
 router.post('/login', authLimiter, validate(loginSchema), controller.login);
-router.post('/logout', authenticate, controller.logout);
+router.post('/logout', optionalAuthenticate, controller.logout);
 router.get('/me', authenticate, controller.me);
 router.post('/forgot-password', authLimiter, validate(forgotPasswordSchema), controller.forgotPassword);
 router.post('/verify-reset-otp', otpLimiter, validate(resetOtpSchema), controller.verifyResetOtp);
