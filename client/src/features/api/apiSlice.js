@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { getCsrfToken, setCsrfToken } from './csrfToken.js'
+import { API_BASE_URL } from './apiBaseUrl.js'
 
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api/v1',
+  baseUrl: API_BASE_URL,
   credentials: 'include',
   prepareHeaders(headers, { type }) {
     if (type !== 'query') {

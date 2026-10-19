@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { io } from 'socket.io-client'
 import { apiSlice } from './apiSlice.js'
+import { API_BASE_URL } from './apiBaseUrl.js'
 import { clearUser } from '../auth/authSlice.js'
 
 const PUBLIC_TAGS = ['Plans', 'Trainers']
@@ -22,8 +23,7 @@ export default function RealtimeSync() {
   const role = user?.role || null
 
   useEffect(() => {
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api/v1'
-    const socket = io(new URL(apiBaseUrl, window.location.origin).origin, { withCredentials: true })
+    const socket = io(new URL(API_BASE_URL, window.location.origin).origin, { withCredentials: true })
     let hasConnected = false
 
     function invalidate(tags) {
