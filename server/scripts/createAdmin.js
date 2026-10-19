@@ -15,12 +15,13 @@ async function createAdmin() {
     name, email, phone: phone || undefined, password: await bcrypt.hash(password, 12),
     role: 'admin', isEmailVerified: true, isPhoneVerified: false, isActive: true
   });
-
+  console.log(`Admin account created: ${user.email}`);
 }
 
 try {
   await createAdmin();
-} catch {
+} catch (error) {
+  console.error('Admin account creation failed:', error.message);
   process.exitCode = 1;
 } finally {
   await disconnectDatabase();
