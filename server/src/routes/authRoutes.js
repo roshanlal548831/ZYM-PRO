@@ -7,6 +7,9 @@ import { authLimiter, otpLimiter } from '../middleware/rateLimiters.js';
 import { registerSchema, emailOtpSchema, resendOtpSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema, changePasswordSchema, phoneOtpSchema, resetOtpSchema } from '../validators/authValidators.js';
 
 const router = Router();
+router.get('/csrf-token', (req, res) => {
+  res.json({ success: true, data: { csrfToken: req.cookies?.csrfToken || null } });
+});
 router.post('/register', authLimiter, validate(registerSchema), controller.register);
 router.post('/verify-email-otp', otpLimiter, validate(emailOtpSchema), controller.verifyEmail);
 router.post('/resend-otp', otpLimiter, validate(resendOtpSchema), controller.resendOtp);

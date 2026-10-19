@@ -22,6 +22,7 @@ function setAccessCookies(res, user) {
   const csrfToken = randomBytes(32).toString('hex');
   res.cookie('accessToken', accessToken, { ...cookieBase, maxAge: durationMs(env.JWT_EXPIRES_IN) });
   res.cookie('csrfToken', csrfToken, { ...cookieBase, httpOnly: false, maxAge: durationMs(env.JWT_EXPIRES_IN) });
+  return csrfToken;
 }
 
 function clearAuthCookies(res) {
@@ -47,8 +48,8 @@ export const verifyEmail = asyncHandler(async (req, res) => {
   const user = await User.findOneAndUpdate({ email: challenge.email, isEmailVerified: false }, { $set: { isEmailVerified: true } }, { new: true }).select('+tokenVersion');
   if (!user) throw new ApiError(400, 'Account could not be verified');
   await OTP.deleteOne({ _id: challenge._id });
-  setAccessCookies(res, user);
-  res.json({ success: true, message: 'Email verified and signed in successfully', data: { user: { id: user.id, name: user.name, email: user.email, role: user.role } } });
+  const csrfToken = setAccessCookies(res, user);
+  res.json({ success: true, message: 'Email verified and signed in successfully', data: { user: { id: user.id, name: user.name, email: user.email, role: user.role }, csrfToken } });
 });
 
 export const resendOtp = asyncHandler(async (req, res) => {
@@ -83,8 +84,8 @@ export const login = asyncHandler(async (req, res) => {
   if (!user || !(await bcrypt.compare(req.body.password, user.password))) throw new ApiError(401, 'Invalid email or password');
   if (!user.isEmailVerified) throw new ApiError(403, 'Verify your email before signing in');
   if (!user.isActive) throw new ApiError(403, 'This account is disabled');
-  setAccessCookies(res, user);
-  res.json({ success: true, message: 'Signed in successfully', data: { user: { id: user.id, name: user.name, email: user.email, role: user.role } } });
+  const csrfToken = setAccessCookies(res, user);
+  res.json({ success: true, message: 'Signed in successfully', data: { user: { id: user.id, name: user.name, email: user.email, role: user.role }, csrfToken } });
 });
 
 export const logout = asyncHandler(async (req, res) => {
