@@ -54,7 +54,9 @@ export function initializeRealtimeServer(httpServer) {
       socket.data.expiresAt = payload.exp;
       next();
     } catch {
-      next(new Error('Authentication required'));
+      // Treat expired or revoked cookies like an anonymous socket connection.
+      socket.data.user = null;
+      next();
     }
   });
 
