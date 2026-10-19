@@ -12,6 +12,10 @@ async function start() {
   await connectDatabase();
   expiryJob = startMembershipExpiryJob();
   server = app.listen(env.PORT);
+  server.on('error', (error) => {
+    console.error('HTTP server failed to start:', error);
+    process.exit(1);
+  });
   initializeRealtimeServer(server);
 }
 
@@ -26,6 +30,7 @@ async function shutdown(signal) {
 
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));
-start().catch(() => {
+start().catch((error) => {
+  console.error('Server startup failed:', error);
   process.exit(1);
 });
