@@ -1,0 +1,21 @@
+import { Router } from 'express';
+import * as controller from '../controllers/authController.js';
+import authenticate from '../middleware/authenticate.js';
+import validate from '../middleware/validate.js';
+import { authLimiter, otpLimiter } from '../middleware/rateLimiters.js';
+import { registerSchema, emailOtpSchema, resendOtpSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema, changePasswordSchema, phoneOtpSchema, resetOtpSchema } from '../validators/authValidators.js';
+
+const router = Router();
+router.post('/register', authLimiter, validate(registerSchema), controller.register);
+router.post('/verify-email-otp', otpLimiter, validate(emailOtpSchema), controller.verifyEmail);
+router.post('/resend-otp', otpLimiter, validate(resendOtpSchema), controller.resendOtp);
+router.post('/resend-phone-otp', authenticate, otpLimiter, controller.resendPhoneOtp);
+router.post('/verify-phone-otp', authenticate, otpLimiter, validate(phoneOtpSchema), controller.verifyPhoneOtp);
+router.post('/login', authLimiter, validate(loginSchema), controller.login);
+router.post('/logout', authenticate, controller.logout);
+router.get('/me', authenticate, controller.me);
+router.post('/forgot-password', authLimiter, validate(forgotPasswordSchema), controller.forgotPassword);
+router.post('/verify-reset-otp', otpLimiter, validate(resetOtpSchema), controller.verifyResetOtp);
+router.post('/reset-password', authLimiter, validate(resetPasswordSchema), controller.resetPassword);
+router.patch('/change-password', authenticate, validate(changePasswordSchema), controller.changePassword);
+export default router;

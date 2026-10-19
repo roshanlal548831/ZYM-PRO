@@ -1,0 +1,24 @@
+import { Router } from 'express';
+import { z } from 'zod';
+import * as controller from '../controllers/adminController.js';
+import authenticate from '../middleware/authenticate.js';
+import authorize from '../middleware/authorize.js';
+import validate from '../middleware/validate.js';
+import auditAdminAction from '../middleware/auditAdminAction.js';
+import { listEnquiries, updateEnquiry } from '../controllers/enquiryController.js';
+import { updateEnquirySchema } from '../validators/enquiryValidators.js';
+
+const id = z.string().regex(/^[a-f\d]{24}$/i);
+const memberStatusSchema = z.object({ params: z.object({ id }), body: z.object({ isActive: z.boolean() }).strict() });
+const dateQuery = z.object({ query: z.object({ from: z.string().datetime().optional(), to: z.string().datetime().optional() }).passthrough() });
+const router = Router();
+router.use(authenticate, authorize('admin'), auditAdminAction);
+router.get('/dashboard', controller.dashboard);
+router.get('/members', controller.members);
+router.patch('/members/:id/status', validate(memberStatusSchema), controller.memberStatus);
+router.get('/payments/summary', validate(dateQuery), controller.paymentSummary);
+router.get('/memberships/expiring', controller.expiringMemberships);
+router.get('/enquiries', listEnquiries);
+router.patch('/enquiries/:id', validate(updateEnquirySchema), updateEnquiry);
+router.get('/notifications', controller.notifications);
+export default router;

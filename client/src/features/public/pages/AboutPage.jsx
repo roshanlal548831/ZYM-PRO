@@ -1,0 +1,6 @@
+﻿import { Link } from "react-router-dom";
+import { MoveUpRight } from "lucide-react";
+export function AboutPage() {
+  return <section className="page-enter mx-auto grid max-w-[1320px] gap-10 px-5 py-16 md:grid-cols-2 md:px-8 md:py-24"><div><p className="text-xs font-bold uppercase tracking-widest text-neutral-500">Why we train</p><h1 className="mt-3 text-5xl font-bold uppercase leading-tight md:text-7xl">More than<br />a workout.</h1></div><div className="space-y-5 text-base leading-7 text-neutral-600"><p className="text-xl font-medium leading-8 text-neutral-900">Zym is built around a simple belief: movement should make everyday life feel better.</p><p>We bring practical coaching, a welcoming training floor, and clear membership options together. The goal is not a perfect routine. It is showing up, learning your strength, and making progress you can keep.</p><p>Our coaches meet members where they are, then help them take the next useful step. Come in for a conversation or book a free trial session.</p><Link className="inline-flex items-center gap-2 border-b-2 border-lime-400 pb-1 text-sm font-bold text-neutral-950" to="/book-trial">Visit Zym <MoveUpRight size={15} /></Link></div></section>;
+}
+

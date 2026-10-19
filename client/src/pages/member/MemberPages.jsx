@@ -1,0 +1,8 @@
+export { MemberOverview } from '../../features/member/pages/MemberOverview.jsx'
+export { ProfilePage } from '../../features/member/pages/ProfilePage.jsx'
+export { MembershipsPage } from '../../features/member/pages/MembershipsPage.jsx'
+export { MembershipDetailPage } from '../../features/member/pages/MembershipDetailPage.jsx'
+export { PaymentsPage } from '../../features/member/pages/PaymentsPage.jsx'
+export { PaymentDetailPage } from '../../features/member/pages/PaymentDetailPage.jsx'
+export { WorkoutsPage } from '../../features/member/pages/WorkoutsPage.jsx'
+export { SecurityPage } from '../../features/member/pages/SecurityPage.jsx'

@@ -1,0 +1,15 @@
+process.env.NODE_ENV = 'test';
+process.env.PORT = '4000';
+process.env.MONGODB_URI = 'mongodb://127.0.0.1:27017/zym_gym_test';
+process.env.FRONTEND_ORIGINS = 'http://localhost:5173';
+process.env.JWT_SECRET = 'test-secret-that-is-at-least-32-characters-long';
+process.env.JWT_EXPIRES_IN = '15m';
+process.env.COOKIE_SECURE = 'false';
+process.env.COOKIE_SAME_SITE = 'lax';
+process.env.OTP_PEPPER = 'test-otp-pepper-value-is-long-enough';
+process.env.EMAIL_HOST = 'smtp.test.invalid';
+process.env.EMAIL_PORT = '587';
+process.env.EMAIL_USER = 'test';
+process.env.EMAIL_PASS = 'test';
+process.env.EMAIL_FROM = 'gym@example.test';
+process.env.WHATSAPP_OTP_TEMPLATE_NAME = 'gym_otp_test';

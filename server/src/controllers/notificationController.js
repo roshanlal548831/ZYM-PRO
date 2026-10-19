@@ -1,0 +1,1 @@
+export { notifications as listNotifications } from './adminController.js';

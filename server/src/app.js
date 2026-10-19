@@ -1,0 +1,44 @@
+import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import { corsOptions } from './config/corsOptions.js';
+import csrfProtection from './middleware/csrfProtection.js';
+import notFound from './middleware/notFound.js';
+import errorHandler from './middleware/errorHandler.js';
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import membershipPlanRoutes from './routes/membershipPlanRoutes.js';
+import membershipRoutes from './routes/membershipRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import trainerRoutes from './routes/trainerRoutes.js';
+import enquiryRoutes from './routes/enquiryRoutes.js';
+import workoutRoutes from './routes/workoutRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
+
+const app = express();
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
+app.use(helmet());
+app.use(cors(corsOptions));
+app.use(cookieParser());
+app.use(express.json({ limit: '100kb', strict: true }));
+app.use(express.urlencoded({ extended: false, limit: '20kb' }));
+app.use(csrfProtection);
+
+app.get('/api/v1/health', (req, res) => res.json({ success: true, message: 'Service healthy', data: { status: 'ok', timestamp: new Date().toISOString() } }));
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/membership-plans', membershipPlanRoutes);
+app.use('/api/v1/memberships', membershipRoutes);
+app.use('/api/v1/payments', paymentRoutes);
+app.use('/api/v1/trainers', trainerRoutes);
+app.use('/api/v1/enquiries', enquiryRoutes);
+app.use('/api/v1/workouts', workoutRoutes);
+app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/notifications', notificationRoutes);
+app.use(notFound);
+app.use(errorHandler);
+
+export default app;

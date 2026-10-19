@@ -1,0 +1,7 @@
+export { LoginPage } from '../../features/auth/pages/LoginPage.jsx'
+export { SignupPage } from '../../features/auth/pages/SignupPage.jsx'
+export { VerifyEmailPage } from '../../features/auth/pages/VerifyEmailPage.jsx'
+export { ResendOtpPage } from '../../features/auth/pages/ResendOtpPage.jsx'
+export { ForgotPasswordPage } from '../../features/auth/pages/ForgotPasswordPage.jsx'
+export { VerifyResetPage } from '../../features/auth/pages/VerifyResetPage.jsx'
+export { ResetPasswordPage } from '../../features/auth/pages/ResetPasswordPage.jsx'

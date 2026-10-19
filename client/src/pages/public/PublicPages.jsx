@@ -1,0 +1,7 @@
+export { HomePage } from '../../features/public/pages/HomePage.jsx'
+export { PlanCard } from '../../features/public/pages/PlanCard.jsx'
+export { PlansPage } from '../../features/public/pages/PlansPage.jsx'
+export { TrainerCard } from '../../features/public/pages/TrainerCard.jsx'
+export { TrainersPage } from '../../features/public/pages/TrainersPage.jsx'
+export { AboutPage } from '../../features/public/pages/AboutPage.jsx'
+export { ContactPage } from '../../features/public/pages/ContactPage.jsx'
