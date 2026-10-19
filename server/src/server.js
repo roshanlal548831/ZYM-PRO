@@ -1,4 +1,3 @@
-import { createServer } from 'node:http';
 import app from './app.js';
 import { env } from './config/env.js';
 import { connectDatabase, disconnectDatabase } from './config/db.js';
@@ -12,9 +11,8 @@ let shuttingDown = false;
 async function start() {
   await connectDatabase();
   expiryJob = startMembershipExpiryJob();
-  server = createServer(app);
+  server = app.listen(env.PORT);
   initializeRealtimeServer(server);
-  server.listen(env.PORT);
 }
 
 async function shutdown(signal) {
