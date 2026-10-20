@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { ArrowUpRight, Dumbbell, Menu, X } from 'lucide-react'
+import { ArrowUpRight, Dumbbell, LogOut, Menu, X } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { useLogoutMutation } from '../../features/auth/authApi.js'
 import { Button } from '../common/UI.jsx'
@@ -14,7 +14,7 @@ export default function PublicLayout() {
   const navigate = useNavigate()
 
   async function handleLogout() {
-    try { await logout().unwrap(); navigate('/') } catch { /* Keep the session visible when logout fails. */ }
+    try { await logout().unwrap(); setOpen(false); navigate('/') } catch { /* Keep the session visible when logout fails. */ }
   }
 
   return <div className="min-h-screen bg-white text-neutral-950">
@@ -28,7 +28,7 @@ export default function PublicLayout() {
         </div>
         <button className="grid size-11 place-items-center md:hidden" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
       </div>
-      {open && <nav className="grid gap-1 border-t border-neutral-200 bg-white p-4 md:hidden" aria-label="Mobile navigation">{links.map(([label, path]) => <NavLink onClick={() => setOpen(false)} key={path} to={path} className="p-3 text-sm font-semibold">{label}</NavLink>)}{user ? <Link onClick={() => setOpen(false)} className="p-3 text-sm font-semibold" to={user.role === 'admin' ? '/admin' : '/app'}>Dashboard</Link> : <Link onClick={() => setOpen(false)} className="p-3 text-sm font-semibold" to="/login">Log in</Link>}</nav>}
+      {open && <nav className="grid gap-1 border-t border-neutral-200 bg-white p-4 md:hidden" aria-label="Mobile navigation">{links.map(([label, path]) => <NavLink onClick={() => setOpen(false)} key={path} to={path} className="p-3 text-sm font-semibold">{label}</NavLink>)}{user ? <><Link onClick={() => setOpen(false)} className="p-3 text-sm font-semibold" to={user.role === 'admin' ? '/admin' : '/app'}>Dashboard</Link><Button variant="outline" className="w-full justify-start" onClick={handleLogout} disabled={isLoading}><LogOut size={16} />Log out</Button></> : <Link onClick={() => setOpen(false)} className="p-3 text-sm font-semibold" to="/login">Log in</Link>}</nav>}
     </header>
     <main><Outlet /></main>
     <footer className="bg-neutral-950 text-white">
