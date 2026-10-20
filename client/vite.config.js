@@ -1,4 +1,6 @@
-﻿import { parse } from '@babel/parser'
+import { readFile } from 'node:fs/promises'
+import { cwd } from 'node:process'
+import { parse } from '@babel/parser'
 import traverseModule from '@babel/traverse'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -54,11 +56,22 @@ function configureVendorRuntimeApiUrl(apiUrl) {
   }
 }
 
+function includeAdminRuntimeStyles() {
+  return {
+    name: 'include-admin-runtime-styles',
+    apply: 'build',
+    async generateBundle() {
+      const source = await readFile(new URL('./vendor-admin-runtime/index-D1utsybw.css', import.meta.url))
+      this.emitFile({ type: 'asset', fileName: 'assets/index-D1utsybw.css', source })
+    },
+  }
+}
+
 export default defineConfig(({ mode }) => {
-  const { VITE_API_BASE_URL } = loadEnv(mode, process.cwd(), 'VITE_')
+  const { VITE_API_BASE_URL } = loadEnv(mode, cwd(), 'VITE_')
   const apiUrl = VITE_API_BASE_URL?.trim() || 'http://localhost:4000/api/v1'
 
   return {
-    plugins: [react(), tailwindcss(), configureVendorRuntimeApiUrl(apiUrl), stripConsoleCalls()],
+    plugins: [react(), tailwindcss(), configureVendorRuntimeApiUrl(apiUrl), includeAdminRuntimeStyles(), stripConsoleCalls()],
   }
 })
