@@ -106,6 +106,24 @@ afterAll(async () => {
   await mongo?.stop();
 });
 
+describe('CORS', () => {
+  it('allows the deployed frontend for API and Socket.IO requests', async () => {
+    const origin = 'https://zym-zwvi.onrender.com';
+    const apiResponse = await request(app)
+      .get('/api/v1/health')
+      .set('Origin', origin)
+      .expect(200);
+    expect(apiResponse.headers['access-control-allow-origin']).toBe(origin);
+
+    const socketResponse = await fetch(`${realtimeUrl}/socket.io/?EIO=4&transport=polling`, {
+      headers: { Origin: origin }
+    });
+    expect(socketResponse.status).toBe(200);
+    expect(socketResponse.headers.get('access-control-allow-origin')).toBe(origin);
+    await socketResponse.body?.cancel();
+  });
+});
+
 describe('auth and access control', () => {
   it('validates registration, verifies OTP, signs in, and logs out', async () => {
     const invalid = await request(app).post('/api/v1/auth/register').send({ email: 'bad' }).expect(400);

@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test';
 process.env.PORT = '4000';
 process.env.MONGODB_URI = 'mongodb://127.0.0.1:27017/zym_gym_test';
-process.env.FRONTEND_ORIGINS = 'http://localhost:5173';
+process.env.FRONTEND_ORIGINS = 'http://localhost:5173,https://zym-zwvi.onrender.com';
 process.env.JWT_SECRET = 'test-secret-that-is-at-least-32-characters-long';
 process.env.JWT_EXPIRES_IN = '15m';
 process.env.COOKIE_SECURE = 'false';

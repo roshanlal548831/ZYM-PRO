@@ -16,7 +16,7 @@ The API listens on `http://localhost:4000` by default. `GET /api/v1/health` repo
 
 ## Configuration
 
-Copy `.env.example` to `.env`. At minimum set `MONGODB_URI`, a 32-character random `JWT_SECRET`, and a separate `OTP_PEPPER` of at least 16 characters. Set `FRONTEND_ORIGINS` to a comma-separated exact origin allowlist. Never commit `.env` or place provider credentials in frontend configuration.
+Copy `.env.example` to `.env`. At minimum set `MONGODB_URI`, a 32-character random `JWT_SECRET`, and a separate `OTP_PEPPER` of at least 16 characters. Set `FRONTEND_ORIGINS` to a comma-separated exact origin allowlist; for Render, include `https://zym-zwvi.onrender.com` in the backend service's environment variable. This allowlist is used by both HTTP and Socket.IO. Never commit `.env` or place provider credentials in frontend configuration.
 
 Email OTPs and email password reset require SMTP configuration (`EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM`). WhatsApp notifications use the official Meta Cloud API; configure `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_API_VERSION`, and approved `WHATSAPP_TEMPLATE_NAME` and `WHATSAPP_OTP_TEMPLATE_NAME`. The expiry reminder template must accept three text parameters: member name, plan name, and expiry date. The OTP template must accept one text parameter for the code. Phone reset is available only to members with a verified phone. Provider failures are recorded and do not roll back membership or payment changes.
 
