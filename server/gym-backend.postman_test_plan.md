@@ -9,7 +9,7 @@ The collection's pre-request script is safe by default:
 - Only localhost hosts are allowed.
 - Every request except the health check is skipped unless the active environment has `testDatabaseConfirmed=yes`.
 - Email-producing requests (signup/resend/reset and payment-confirmation email) are skipped unless `emailSinkConfirmed=yes`.
-- The phone OTP send request is always skipped because it calls the Meta WhatsApp API. Phone-based forgot-password is skipped too.
+- The phone OTP send request is always skipped because it sends a live Twilio SMS. Phone-based forgot-password is skipped too.
 - Payment write/confirm/refund requests are skipped unless `allowTestPaymentRecords=yes`.
 - Requests requiring a role are skipped until that role has logged in and populated its cookie variables.
 
@@ -69,7 +69,7 @@ All paths are mounted below `/api/v1`. `JSON` means `Content-Type: application/j
 | `POST /api/v1/auth/register` | Public; rate limited | JSON: `name`, `email`, `password`, optional `phone`; always creates member |
 | `POST /api/v1/auth/verify-email-otp` | Public; OTP limited | JSON: `email`, six-digit `otp` |
 | `POST /api/v1/auth/resend-otp` | Public; OTP limited | JSON: `email`, optional `purpose` (`signup` or `password-reset`) |
-| `POST /api/v1/auth/resend-phone-otp` | Authenticated member/admin; OTP limited; CSRF | No body; sends WhatsApp OTP (collection skips it) |
+| `POST /api/v1/auth/resend-phone-otp` | Authenticated member/admin; OTP limited; CSRF | No body; sends Twilio Verify SMS OTP (collection skips it) |
 | `POST /api/v1/auth/verify-phone-otp` | Authenticated member/admin; OTP limited; CSRF | JSON: six-digit `otp` |
 | `POST /api/v1/auth/login` | Public; rate limited | JSON: `email`, `password`; sets access/CSRF cookies |
 | `POST /api/v1/auth/logout` | Authenticated; CSRF | No body; revokes session |

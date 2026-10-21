@@ -18,7 +18,7 @@ The API listens on `http://localhost:4000` by default. `GET /api/v1/health` repo
 
 Copy `.env.example` to `.env`. At minimum set `MONGODB_URI`, a 32-character random `JWT_SECRET`, and a separate `OTP_PEPPER` of at least 16 characters. Set `FRONTEND_ORIGINS` to a comma-separated exact origin allowlist; for Render, include `https://zym-zwvi.onrender.com` in the backend service's environment variable. This allowlist is used by both HTTP and Socket.IO. Never commit `.env` or place provider credentials in frontend configuration.
 
-Email OTPs and email password reset require SMTP configuration (`EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM`). WhatsApp notifications use the official Meta Cloud API; configure `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_API_VERSION`, and approved `WHATSAPP_TEMPLATE_NAME` and `WHATSAPP_OTP_TEMPLATE_NAME`. The expiry reminder template must accept three text parameters: member name, plan name, and expiry date. The OTP template must accept one text parameter for the code. Phone reset is available only to members with a verified phone. Provider failures are recorded and do not roll back membership or payment changes.
+Email OTPs and email password reset require SMTP configuration (`EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM`). Phone OTPs and phone password reset use Twilio Verify to send and validate SMS codes; set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_VERIFY_SERVICE_SID` in `server/.env`. The Verify Service SID starts with `VA`; a sender phone number is not needed. Restart the backend after changing `.env`. Phone reset is available only to members with a verified phone. WhatsApp notifications use the official Meta Cloud API; configure `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_API_VERSION`, and approved `WHATSAPP_TEMPLATE_NAME`. The WhatsApp expiry reminder template must accept three text parameters: member name, plan name, and expiry date. Provider failures are recorded and do not roll back membership or payment changes.
 
 Image uploads use Cloudinary. Set `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET` in the server environment. Uploads accept one JPEG, PNG, WebP, or GIF file in multipart field `image`, up to 5 MB. Profile images upload to `zym/profiles`; trainer images upload to `zym/trainers`. Replacing or removing an image deletes the previous Cloudinary asset after the database update succeeds. Without Cloudinary credentials, upload requests return `503`; existing URL-based profile and trainer updates remain supported.
 
@@ -148,7 +148,7 @@ server/
     controllers/  auth, user, membership plans/memberships, payment, trainer, enquiry, workout, admin, notification
     routes/       auth, user, membership plans/memberships, payment, trainer, enquiry, workout, admin, notification
     middleware/   auth, authorization, validation, errors, rate limits, CSRF, audit logging
-    services/     OTP, email, WhatsApp, membership, payment, notification
+    services/     OTP, email, SMS, WhatsApp, membership, payment, notification
     validators/   auth, user, membership, payment, enquiry
     jobs/         membershipExpiryJob.js
     utils/        errors, async handling, OTP, receipts, pagination

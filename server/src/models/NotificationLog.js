@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const schema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
-  channel: { type: String, enum: ['email', 'whatsapp'], required: true },
+  channel: { type: String, enum: ['email', 'whatsapp', 'sms'], required: true },
   template: { type: String, required: true, trim: true },
   recipient: { type: String, required: true, trim: true },
   status: { type: String, enum: ['queued', 'sent', 'failed'], default: 'queued', index: true },

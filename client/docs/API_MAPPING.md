@@ -67,4 +67,4 @@ Realtime updates use Socket.IO on the same backend origin. The handshake reuses 
 - Trial enquiries are requests to contact the visitor; the API does not book a date/time slot or confirm an appointment.
 - There is no member-initiated payment endpoint. Members cannot submit or confirm payments; an admin records offline payment.
 - The payments endpoint responds that new records are already confirmed. The separate confirm endpoint remains available for eligible pending records.
-- Signup requires configured email delivery; phone OTP requires configured WhatsApp delivery. Browser flows can only be completed when those backend providers deliver codes.
+- Signup requires configured email delivery; phone OTP and phone password reset require configured Twilio Verify SMS delivery. Browser flows can only be completed when those backend providers deliver codes.

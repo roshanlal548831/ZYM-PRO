@@ -10,12 +10,18 @@ const imageServiceMocks = vi.hoisted(() => ({
   uploadImage: vi.fn(),
   deletePreviousImage: vi.fn()
 }));
+const smsServiceMocks = vi.hoisted(() => ({
+  assertSmsConfigured: vi.fn(),
+  checkVerificationSms: vi.fn().mockResolvedValue(true)
+}));
 
 vi.mock('../src/services/notificationService.js', () => ({
   notifyEmail: vi.fn().mockResolvedValue({}),
   notifyWhatsApp: vi.fn().mockResolvedValue({}),
+  notifySms: vi.fn().mockResolvedValue({}),
   deliverNotification: vi.fn().mockResolvedValue({})
 }));
+vi.mock('../src/services/smsService.js', () => smsServiceMocks);
 vi.mock('../src/utils/generateOtp.js', () => ({ default: () => '123456' }));
 vi.mock('../src/services/imageService.js', () => imageServiceMocks);
 
@@ -30,6 +36,8 @@ import WorkoutPlan from '../src/models/WorkoutPlan.js';
 import Enquiry from '../src/models/Enquiry.js';
 import AuditLog from '../src/models/AuditLog.js';
 import { closeRealtimeServer, initializeRealtimeServer } from '../src/services/realtimeService.js';
+import { notifySms } from '../src/services/notificationService.js';
+import { checkVerificationSms } from '../src/services/smsService.js';
 
 let mongo;
 let admin;
@@ -156,10 +164,17 @@ describe('auth and access control', () => {
   });
 
   it('verifies a member phone and supports password reset by verified phone', async () => {
+    vi.mocked(notifySms).mockClear();
+    vi.mocked(checkVerificationSms).mockClear();
     const account = await createMember('phone@example.com', '+919876543210');
     const signedIn = await login(account.email, 'secure-password-123');
     await signedIn.agent.post('/api/v1/auth/resend-phone-otp').set('X-CSRF-Token', signedIn.csrf).send({}).expect(200);
+    expect(notifySms).toHaveBeenCalledWith(expect.objectContaining({
+      to: '+919876543210',
+      template: 'phone-otp'
+    }));
     await signedIn.agent.post('/api/v1/auth/verify-phone-otp').set('X-CSRF-Token', signedIn.csrf).send({ otp: '123456' }).expect(200);
+    expect(checkVerificationSms).toHaveBeenCalledWith({ to: '+919876543210', code: '123456' });
     await request(app).post('/api/v1/auth/forgot-password').send({ identifier: '+919876543210' }).expect(200);
     const verified = await request(app).post('/api/v1/auth/verify-reset-otp').send({ identifier: '+919876543210', otp: '123456' }).expect(200);
     const resetCookie = verified.headers['set-cookie'].find((item) => item.startsWith('resetToken=')).split(';')[0];

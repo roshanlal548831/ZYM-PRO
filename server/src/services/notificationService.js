@@ -1,5 +1,6 @@
 import NotificationLog from '../models/NotificationLog.js';
 import { sendEmail } from './emailService.js';
+import { sendVerificationSms } from './smsService.js';
 import { sendWhatsAppTemplate } from './whatsappService.js';
 import { publishRealtimeChange } from './realtimeService.js';
 
@@ -45,4 +46,8 @@ export async function notifyEmail({ user, to, template, subject, text, dedupeKey
 
 export async function notifyWhatsApp({ user, to, template, parameters, dedupeKey }) {
   return deliverNotification({ user, channel: 'whatsapp', recipient: to, template, dedupeKey, send: () => sendWhatsAppTemplate({ to, template, parameters }) });
+}
+
+export async function notifySms({ user, to, template, dedupeKey }) {
+  return deliverNotification({ user, channel: 'sms', recipient: to, template, dedupeKey, send: () => sendVerificationSms({ to }) });
 }

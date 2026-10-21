@@ -12,4 +12,6 @@ process.env.EMAIL_PORT = '587';
 process.env.EMAIL_USER = 'test';
 process.env.EMAIL_PASS = 'test';
 process.env.EMAIL_FROM = 'gym@example.test';
-process.env.WHATSAPP_OTP_TEMPLATE_NAME = 'gym_otp_test';
+process.env.TWILIO_ACCOUNT_SID = 'AC00000000000000000000000000000000';
+process.env.TWILIO_AUTH_TOKEN = 'test-twilio-auth-token';
+process.env.TWILIO_VERIFY_SERVICE_SID = 'VA00000000000000000000000000000000';

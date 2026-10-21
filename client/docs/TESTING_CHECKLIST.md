@@ -54,4 +54,4 @@ Run `npm run lint` and `npm run build` from `client/` before manual testing. Kee
 
 - The API does not expose trainer or workout admin list/detail reads, so existing inactive trainers and existing workout plans cannot be browsed or edited through this UI.
 - Trial requests create enquiries only; no appointment time is booked by the backend.
-- Real email/WhatsApp OTP delivery and live Cloudinary upload require external server credentials; automated API mocks do not validate those providers.
+- Real email/Twilio Verify SMS OTP delivery and live Cloudinary upload require external server credentials; automated API mocks do not validate those providers.
